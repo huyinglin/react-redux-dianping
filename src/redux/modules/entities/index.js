@@ -1,4 +1,4 @@
-import { combineReducers } from 'reudx';
+import { combineReducers } from 'redux';
 import products from './products';
 import shops from './shops';
 import orders from './orders';
@@ -10,3 +10,5 @@ const rootReducer = combineReducers({
   orders,
   comments,
 });
+
+export default rootReducer;

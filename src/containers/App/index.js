@@ -3,14 +3,15 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import ErrorToast from '../../components/ErrorToast';
 import { actions as appActions, getError } from "../../redux/modules/app";
-import './style.css';
+import Home from '../Home';
 
 function App({
   error,
   appActions: { clearError }
 }) {
   return (
-    <div className="App">
+    <div>
+      <Home/>
       {error && <ErrorToast msg={error} clearError={clearError} />}
     </div>
   );
