@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import LikeItem from "../LikeItem"
+import Loading from "../../../../components/Loading"
 import "./style.css"
 
 const dataSource = [
@@ -67,10 +68,55 @@ const dataSource = [
 
 
 class LikeList extends Component {
+  state = {
+    loadTimes: 1,
+    data: dataSource,
+  }
+
+  myRef = React.createRef(null);
+
+  timer;
+
+  removeListener = false;
+
+  componentDidMount() {
+    window.addEventListener('scroll', this.handleScroll)
+  }
+
+  componentDidUpdate() {
+    if (this.state.loadTimes >= 3 && !this.removeListener) {
+      this.removeListener = true;
+      window.removeEventListener('scroll', this.handleScroll);
+    }
+  }
+
+  componentWillUnmount() {
+    if (!this.removeListener) {
+      window.removeEventListener('scroll', this.handleScroll);
+    }
+  }
+
+  handleScroll = () => {
+    const clientHeight = document.documentElement.clientHeight || document.body.clientHeight;
+    const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+    const offsetTop = this.myRef.current.offsetTop;
+    const offsetHeight = this.myRef.current.offsetHeight;
+
+    if (scrollTop >= offsetTop + offsetHeight - clientHeight) {
+      clearTimeout(this.timer);
+      this.timer = setTimeout(() => {
+        this.setState(({data, loadTimes}) => ({
+          loadTimes: loadTimes + 1,
+          data: data.concat(dataSource)
+        }));
+      }, 1000);
+    }
+  }
+
   render() {
-    const data = dataSource
+    const { data, loadTimes } = this.state;
     return (
-      <div className="likeList">
+      <div ref={this.myRef} className="likeList">
         <div className="likeList__header">猜你喜欢</div>
         <div className="likeList__list">
           {
@@ -79,6 +125,15 @@ class LikeList extends Component {
             })
           }
         </div>
+        {
+          loadTimes < 3 ? (
+            <Loading/>
+          ): (
+            <a className="likeList__viewAll">
+              查看更多
+            </a>
+          )
+        }
       </div>
     );
   }
