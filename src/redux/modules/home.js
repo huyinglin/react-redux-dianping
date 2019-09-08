@@ -50,6 +50,10 @@ export const actions = {
   },
   loadDiscounts: () => {
     return (dispatch, getState) => {
+      const { ids } = getState().home.discounts
+      if (ids.length) {
+        return null;
+      }
       const endpoint = url.getProductList(
         params.PATH_DISCOUNTS,
         0,

@@ -11,8 +11,15 @@ class LikeList extends Component {
   removeListener = false;
 
   componentDidMount() {
-    window.addEventListener("scroll", this.handleScroll);
-    this.props.fetchData();
+    const { fetchData, pageCount } = this.props;
+    if (pageCount < 3) {
+      window.addEventListener("scroll", this.handleScroll);
+    } else {
+      this.removeListener = false;
+    }
+    if (pageCount === 0) {
+      fetchData();
+    }
   }
 
   componentDidUpdate() {
@@ -44,7 +51,7 @@ class LikeList extends Component {
   render() {
     const { data, pageCount } = this.props;
     console.log(234, data);
-    
+
     return (
       <div ref={this.myRef} className="likeList">
         <div className="likeList__header">猜你喜欢</div>
