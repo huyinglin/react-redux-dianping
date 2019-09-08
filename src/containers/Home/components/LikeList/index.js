@@ -50,8 +50,6 @@ class LikeList extends Component {
 
   render() {
     const { data, pageCount } = this.props;
-    console.log(234, data);
-
     return (
       <div ref={this.myRef} className="likeList">
         <div className="likeList__header">猜你喜欢</div>

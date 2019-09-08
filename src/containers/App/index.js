@@ -5,6 +5,7 @@ import { bindActionCreators } from 'redux';
 import ErrorToast from '../../components/ErrorToast';
 import { actions as appActions, getError } from "../../redux/modules/app";
 import Home from '../Home';
+import ProductDetail from '../ProductDetail'
 
 function App({
   error,
@@ -14,6 +15,7 @@ function App({
     <div>
       <BrowserRouter>
         <Switch>
+          <Route path="/detail/:id" component={ProductDetail} />
           <Route path="/" component={Home}/>
         </Switch>
       </BrowserRouter>
