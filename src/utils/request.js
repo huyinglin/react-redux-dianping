@@ -9,7 +9,7 @@ async function get(url) {
       method: 'GET',
       headers: headers,
     });
-    handleResponse(url, response);
+    return handleResponse(url, response);
   }
   catch (err) {
     console.error(`Request failed. Url = ${url}. Message = ${err}`);
@@ -28,7 +28,7 @@ async function post(url, data) {
       headers: headers,
       body: data,
     });
-    handleResponse(url, response);
+    return handleResponse(url, response);
   }
   catch (err) {
     console.error(`Request failed. Url = ${url}. Message = ${err}`);
