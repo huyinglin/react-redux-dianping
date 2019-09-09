@@ -12,7 +12,7 @@ function App({
   appActions: { clearError }
 }) {
   return (
-    <div>
+    <div className="App">
       <BrowserRouter>
         <Switch>
           <Route path="/detail/:id" component={ProductDetail} />
