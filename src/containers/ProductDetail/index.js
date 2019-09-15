@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import ProductOverview from "./components/ProductOverview";
@@ -36,11 +36,15 @@ class ProductDetail extends Component {
     return (
       <div>
         <Header title="团购详情" onBack={this.handleBack} grey />
-        <ProductOverview data={product} />
-        <ShopInfo data={relatedShop} />
-        <Detail />
-        <Remark />
-        <BuyButton />
+        {product && <ProductOverview data={product} />}
+        {relatedShop && <ShopInfo data={relatedShop} total={product.shopIds.length} />}
+        {product && (
+          <Fragment>
+            <Detail data={product} />
+            <Remark data={product} />
+            <BuyButton productId={product.id} />
+          </Fragment>
+        )}
       </div>
     );
   }

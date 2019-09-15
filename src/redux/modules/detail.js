@@ -89,7 +89,7 @@ const fetchShopSuccess = id => ({
 })
 
 const product = (state = initialState.product, action) => {
-  console.log('product-deatil reducer: ', action);
+  console.log('54674', action);
 
   switch (action.type) {
     case types.FETCH_PRODUCT_DETAIL_REQUEST:
@@ -101,7 +101,7 @@ const product = (state = initialState.product, action) => {
       return {
         ...state,
         isFetching: false,
-        id: action.response.id,
+        id: action.id,
       }
     case types.FETCH_PRODUCT_DETAIL_FAILURE:
       return {
@@ -124,7 +124,7 @@ const relatedShop = (state = initialState.relatedShop, action) => {
       return {
         ...state,
         isFetching: false,
-        id: action.response.id,
+        id: action.id,
       }
     case types.FETCH_SHOP_FAILURE:
       return {
@@ -152,7 +152,7 @@ export const getProduct = (state, id) => {
 // 关联的店铺信息
 export const getRelatedShop = (state, productId) => {
   // const product = state.entities.product[productId]; // 应避免直接通过state获取领域实体内容，最好通过product领域实体中的selector获取
-  const product = getProductById(productId);
+  const product = getProductById(state, productId);
   let shopId = product ? product.nearestShop : null;
   if (shopId) {
     return getShopById(state, shopId);
