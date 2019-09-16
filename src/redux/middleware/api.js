@@ -5,6 +5,11 @@ export const FETCH_DATA = 'FETCH DATA'; // 经过中间件处理的action所具�
 export default store => next => action => {
   const callAPI = action[FETCH_DATA];
 
+  console.log(111, store);
+  console.log(222, next);
+  console.log(333, action);
+
+
   if (typeof callAPI === 'undefined') {
     return next(action);
   }
