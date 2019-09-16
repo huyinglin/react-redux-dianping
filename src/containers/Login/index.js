@@ -4,7 +4,7 @@ import { Redirect } from 'react-router-dom';
 import { bindActionCreators } from 'redux';
 import LoginHeader from "./components/LoginHeader";
 import LoginForm from "./components/LoginForm";
-import { actins as loginAction, getUsername, getPassword, isLogin } from '../../redux/modules/login';
+import { actions as loginAction, getUsername, getPassword, isLogin } from '../../redux/modules/login';
 
 class Login extends Component {
   handleChange = (e) => {

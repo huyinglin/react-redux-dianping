@@ -16,7 +16,7 @@ export const types = {
 };
 
 // action
-export const actins = {
+export const actions = {
   login: () => {
     return (dispatch, getState) => {
       const { username, password } = getState().login;
