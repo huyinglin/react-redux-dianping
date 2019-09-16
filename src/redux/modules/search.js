@@ -2,6 +2,8 @@ import { combineReducers } from "redux"
 import url from "../../utils/url"
 import { FETCH_DATA } from "../middleware/api"
 import { schema as keywordSchema, getKeywordsById } from "./entities/keywords"
+import { schema as shopSchema } from "./entities/keywords";
+import { getShopById } from "./entities/shops";
 
 export const types = {
   //获取热门关键词
@@ -18,6 +20,10 @@ export const types = {
   // 历史查询记录
   ADD_HISTORY_KEYWORD: "SEARCH/ADD_HISTORY_KEYWORD",
   CLEAR_HISTORY_KEYWORDS: "SEARCH/CLEAR_HISTORY_KEYWORDS",
+  // 根据关键词查询结果
+  FETCH_SHOPS_REQUEST: "SEARCH/FETCH_SHOPS_REQUEST",
+  FETCH_SHOPS_SUCCESS: "SEARCH/FETCH_SHOPS_SUCCESS",
+  FETCH_SHOPS_FAILURE: "SEARCH/FETCH_SHOPS_FAILURE",
 }
 
 const initialState = {
@@ -35,10 +41,18 @@ const initialState = {
    *    }
    * }
    */
-  relatedKeywords: {
-
-  },
+  relatedKeywords: {},
   historyKeywords: [],  //保存关键词id
+  /**
+   * searchedShopsByKeywords结构
+   * {
+   *   'keywordId': {
+   *       isFetching: false,
+   *       ids: []
+   *    }
+   * }
+   */
+  searchedShopsByKeywords: {},
 }
 
 
@@ -66,6 +80,17 @@ export const actions = {
       return dispatch(fetchRelatedKeywords(text, endpoint));
     }
   },
+  // 获取查询到的店铺列表
+  loadRelatedShops: keyword => {
+    return (dispatch, getState) => {
+      const { searchedShopsByKeyword } = getState().search;
+      if(searchedShopsByKeyword[keyword]) {
+        return null;
+      }
+      const endpoint = url.getRelatedShops(keyword);
+      return dispatch(fetchRelatedShops(keyword, endpoint));
+    }
+  },
   //搜索框输入文本相关action
   setInputText: text => ({
     type: types.SET_INPUT_TEXT,
@@ -81,7 +106,7 @@ export const actions = {
   }),
   clearHistoryKeywords: () => ({
     type: types.CLEAR_HISTORY_KEYWORDS
-  })
+  }),
 }
 
 const fetchPopularKeywords = endpoint => ({
@@ -107,6 +132,19 @@ const fetchRelatedKeywords = (text, endpoint) => ({
     schema: keywordSchema
   },
   text,
+})
+
+const fetchRelatedShops = (text, endpoint) => ({
+  [FETCH_DATA]: {
+    types: [
+      types.FETCH_SHOPS_REQUEST,
+      types.FETCH_SHOPS_SUCCESS,
+      types.FETCH_SHOPS_FAILURE
+    ],
+    endpoint,
+    schema: shopSchema
+  },
+  text
 })
 
 // reducers
@@ -170,6 +208,41 @@ const relatedKeywordsByText = (state = { isFetching: false, ids: [] }, action) =
   }
 }
 
+
+const searchedShopsByKeyword = (state = initialState.searchedShopsByKeywords, action) => {
+  switch (action.type) {
+    case types.FETCH_SHOPS_REQUEST:
+    case types.FETCH_SHOPS_SUCCESS:
+    case types.FETCH_SHOPS_FAILURE:
+      return {
+        ...state,
+        [action.text]: searchedShops(state[action.text], action)
+      };
+    default:
+      return state;
+  }
+};
+
+const searchedShops = (
+  state = { isFetching: false, ids: [] },
+  action
+) => {
+  switch (action.type) {
+    case types.FETCH_SHOPS_REQUEST:
+      return { ...state, isFetching: true };
+    case types.FETCH_SHOPS_SUCCESS:
+      return {
+        ...state,
+        isFetching: false,
+        ids: action.response.ids
+      };
+    case types.FETCH_SHOPS_FAILURE:
+      return { ...state, isFetching: false };
+    default:
+      return state;
+  }
+};
+
 const inputText = (state = initialState.inputText, action) => {
   switch (action.type) {
     case types.SET_INPUT_TEXT:
@@ -197,7 +270,8 @@ const reducer = combineReducers({
   popularKeywords,
   relatedKeywords,
   inputText,
-  historyKeywords
+  historyKeywords,
+  searchedShopsByKeyword,
 })
 
 export default reducer;
@@ -222,4 +296,25 @@ export const getInputText = state => {
 
 export const getHistoryKeywords = state => {
   return state.search.historyKeywords.map(id => getKeywordsById(state, id));
+}
+
+// 获取店铺列表
+export const getSearchedShops = state => {
+  const keywordId = state.search.historyKeywords[0];
+  if(!keywordId) {
+    return [];
+  }
+  const shops = state.search.searchedShopsByKeyword[keywordId];
+  return shops.ids.map(id => {
+    return getShopById(state, id);
+  })
+}
+
+// 获取当前关键词
+export const getCurrentKeyword = state => {
+  const keywordId = state.search.historyKeywords[0];
+  if(!keywordId) {
+    return ""
+  }
+  return getKeywordsById(state, keywordId).keyword;
 }

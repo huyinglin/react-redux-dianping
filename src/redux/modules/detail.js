@@ -89,8 +89,6 @@ const fetchShopSuccess = id => ({
 })
 
 const product = (state = initialState.product, action) => {
-  console.log('54674', action);
-
   switch (action.type) {
     case types.FETCH_PRODUCT_DETAIL_REQUEST:
         return {
