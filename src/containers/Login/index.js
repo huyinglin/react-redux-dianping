@@ -21,9 +21,9 @@ class Login extends Component {
   }
 
   render() {
-    const { username, password, login } = this.props;
+    const { username, password, login, location: { state } } = this.props;
     if (login) {
-      return <Redirect to='/user' />;
+      return <Redirect to={state && state.from ? state.from : '/user'} />;
     }
     return (
       <div>
