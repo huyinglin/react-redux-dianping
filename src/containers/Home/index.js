@@ -23,8 +23,6 @@ class Home extends Component {
 
   render() {
     const { likes, discounts, pageCount, homeActions } = this.props;
-    console.log(2443, this.props);
-    
     return (
       <div>
         <HomeHeader />
