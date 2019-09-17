@@ -8,15 +8,11 @@ import { actions as loginActions } from "../../redux/modules/login";
 
 class User extends Component {
   render() {
-    const { currentTab, orders } = this.props;
+    const { orders } = this.props;
     return (
       <div>
         <UserHeader onBack={this.handleBack} onLogout={this.handleLogout}/>
-        <UserMain
-          currentTab={currentTab}
-          data={orders}
-          onSetCurrentTab={this.handleSetCurrentTab}
-        />
+        <UserMain data={orders} />
       </div>
     );
   }

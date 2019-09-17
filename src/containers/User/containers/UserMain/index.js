@@ -43,7 +43,7 @@ class UserMain extends Component {
             ? this.renderOrderList(data)
             : this.renderEmpty()}
         </div>
-        {deletingOrderId ? this.renderConfirmDialog() : null}
+        {deletingOrderId && this.renderConfirmDialog()}
       </div>
     );
   }
