@@ -14,10 +14,17 @@ import {
   actions as commentActions,
 } from './entities/comments';
 
+const typeToKey = {
+  [TO_PAY_TYPE]: "toPayIds",
+  [AVAILABLE_TYPE]: "availableIds",
+  [REFUND_TYPE]: "refundIds"
+};
+
 const initialState = {
   orders: {
     isFetching: false,
     ids: [],
+    fetched: false, //购买页面使用
     toPayIds: [], // 待付款订单id
     availableIds: [], // 可使用的订单id
     refundIds: [], // 退款订单id
@@ -62,8 +69,8 @@ export const types = {
 export const actions = {
   loadOrders: () => {
     return (dispatch, getState) => {
-      const { ids } = getState().user.orders;
-      if (ids.length > 0) {
+      const { fetched } = getState().user.orders;
+      if (fetched) {
         return null;
       }
       const endpoint = url.getOrders();
@@ -183,6 +190,7 @@ const orders = (state = initialState.orders, action) => {
       return {
         ...state,
         isFetching: false,
+        fetched: true,
         ids: [...state.ids, ...action.response.ids],
         toPayIds: [...state.toPayIds, ...toPayIds],
         availableIds: [...state.availableIds, ...availableIds],
@@ -202,6 +210,19 @@ const orders = (state = initialState.orders, action) => {
         availableIds: removeOrderId(state, 'availableIds', action.orderId),
         refundIds: removeOrderId(state, 'refundIds', action.orderId),
       }
+    case orderTypes.ADD_ORDER:
+      const { order } = action;
+      const key = typeToKey[order.type];
+      return key
+        ? {
+          ...state,
+          ids: [order.id, ...state.ids],
+          [key]: [order.id, ...state[key]],
+        }
+        : {
+          ...state,
+          ids: [order.id, ...state.ids],
+        }
     default:
       return state;
   }
