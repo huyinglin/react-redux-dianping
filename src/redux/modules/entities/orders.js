@@ -15,7 +15,11 @@ export const types = {
   DELETE_ORDER: "ORDERS/DELETE_ORDER",
   // 新增评价
   ADD_COMMENT: "ORDERS/ADD_COMMENT",
+  //增加订单
+  ADD_ORDER: "ORDERS/ADD_ORDER",
 }
+
+let orderIdCounter = 10;
 
 export const actions = {
   deleteOrder: (orderId) => ({
@@ -27,6 +31,15 @@ export const actions = {
     orderId,
     commentId,
   }),
+  //增加订单
+  addOrder: order => {
+  const orderId = `o-${orderIdCounter++}`;
+  return {
+    type: types.ADD_ORDER,
+    orderId,
+    order: {...order, id: orderId}
+  }
+}
 }
 
 const reducer = (state = {}, action) => {
@@ -41,6 +54,11 @@ const reducer = (state = {}, action) => {
           ...state[action.orderId],
           commentId: action.commentId,
         }
+      }
+    case types.ADD_ORDER:
+      return {
+        ...state,
+        [action.orderId]: action.order
       }
     default:
       return createReducer(schema.name)(state, action);
