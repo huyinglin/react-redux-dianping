@@ -93,7 +93,7 @@
 
 .orderItem__commentContainer {
   width: 100%;
-  padding-bottom: 10px; 
+  padding-bottom: 10px;
 }
 
 .orderItem__comment {
@@ -119,6 +119,7 @@
 .orderItem__commentBtn {
   display: inline-block;
   border: 1px solid #bbb;
+  margin-right: 8px;
   color: #555;
   background-color: #fff;
   height: 27px;
