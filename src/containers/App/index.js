@@ -11,6 +11,7 @@ import SearchResult from "../SearchResult";
 import Login from "../Login";
 import User from "../User";
 import PrivateRoute from '../PrivateRoute';
+import Purchase from "../Purchase"
 
 function App({
   error,
@@ -25,6 +26,7 @@ function App({
           <Route path="/detail/:id" component={ProductDetail} />
           <Route path="/search" component={Search} />
           <Route path="/search_result" component={SearchResult} />
+          <PrivateRoute path="/purchase/:id" component={Purchase} />
           <Route path="/" component={Home}/>
         </Switch>
       </BrowserRouter>
