@@ -18,7 +18,7 @@ class User extends Component {
   }
 
   componentDidMount() {
-    this.props.userActions.loadOrders()
+    this.props.userActions.loadOrders();
   }
 
   handleBack = () => {
